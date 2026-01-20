@@ -47,7 +47,7 @@ const DashboardPage: React.FC = () => {
             <div className="feature-icon">Quiz</div>
             <h3>Quiz Builder</h3>
             <p>Create and manage quiz questions for videos</p>
-            <span className="coming-soon">Coming Soon</span>
+            <span className="hint-text">Access via Video Management</span>
           </div>
 
           <div className="feature-card clickable" onClick={() => navigate('/tracks')}>
@@ -56,11 +56,10 @@ const DashboardPage: React.FC = () => {
             <p>Configure training sequences by delivery type</p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card clickable" onClick={() => navigate('/analytics')}>
             <div className="feature-icon">Analytics</div>
             <h3>Analytics</h3>
             <p>View training completion metrics and reports</p>
-            <span className="coming-soon">Coming Soon</span>
           </div>
         </div>
       </main>

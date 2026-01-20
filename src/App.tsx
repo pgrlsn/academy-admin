@@ -8,6 +8,7 @@ import VideoFormPage from './pages/videos/VideoFormPage';
 import QuizBuilderPage from './pages/quiz/QuizBuilderPage';
 import MandatoryTracksPage from './pages/tracks/MandatoryTracksPage';
 import TrackEditorPage from './pages/tracks/TrackEditorPage';
+import AnalyticsDashboardPage from './pages/analytics/AnalyticsDashboardPage';
 import './App.css';
 
 function App() {
@@ -69,6 +70,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <TrackEditorPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute>
+                <AnalyticsDashboardPage />
               </ProtectedRoute>
             }
           />
