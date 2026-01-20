@@ -1,8 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import './DashboardPage.css';
 
 const DashboardPage: React.FC = () => {
+  const navigate = useNavigate();
   const { user, logout } = useAuth();
 
   const handleLogout = async () => {
@@ -35,11 +37,10 @@ const DashboardPage: React.FC = () => {
         </div>
 
         <div className="feature-grid">
-          <div className="feature-card">
+          <div className="feature-card clickable" onClick={() => navigate('/videos')}>
             <div className="feature-icon">Videos</div>
             <h3>Video Management</h3>
             <p>Upload, edit, and organize training videos</p>
-            <span className="coming-soon">Coming Soon</span>
           </div>
 
           <div className="feature-card">

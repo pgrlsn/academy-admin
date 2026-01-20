@@ -3,6 +3,8 @@ import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
+import VideoListPage from './pages/videos/VideoListPage';
+import VideoFormPage from './pages/videos/VideoFormPage';
 import './App.css';
 
 function App() {
@@ -16,6 +18,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <DashboardPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/videos"
+            element={
+              <ProtectedRoute>
+                <VideoListPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/videos/new"
+            element={
+              <ProtectedRoute>
+                <VideoFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/videos/:id/edit"
+            element={
+              <ProtectedRoute>
+                <VideoFormPage />
               </ProtectedRoute>
             }
           />
