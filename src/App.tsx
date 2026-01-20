@@ -6,6 +6,8 @@ import DashboardPage from './pages/DashboardPage';
 import VideoListPage from './pages/videos/VideoListPage';
 import VideoFormPage from './pages/videos/VideoFormPage';
 import QuizBuilderPage from './pages/quiz/QuizBuilderPage';
+import MandatoryTracksPage from './pages/tracks/MandatoryTracksPage';
+import TrackEditorPage from './pages/tracks/TrackEditorPage';
 import './App.css';
 
 function App() {
@@ -51,6 +53,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <QuizBuilderPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tracks"
+            element={
+              <ProtectedRoute>
+                <MandatoryTracksPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/tracks/:deliveryType"
+            element={
+              <ProtectedRoute>
+                <TrackEditorPage />
               </ProtectedRoute>
             }
           />

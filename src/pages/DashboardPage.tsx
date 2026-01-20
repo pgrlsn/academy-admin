@@ -50,11 +50,10 @@ const DashboardPage: React.FC = () => {
             <span className="coming-soon">Coming Soon</span>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card clickable" onClick={() => navigate('/tracks')}>
             <div className="feature-icon">Tracks</div>
             <h3>Mandatory Tracks</h3>
             <p>Configure training sequences by delivery type</p>
-            <span className="coming-soon">Coming Soon</span>
           </div>
 
           <div className="feature-card">
