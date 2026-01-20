@@ -367,6 +367,20 @@ const VideoFormPage = () => {
           </div>
         </div>
 
+        {isEditMode && id && (
+          <div className="form-section quiz-section">
+            <h2>Quiz Questions</h2>
+            <p className="section-hint">Add quiz questions that riders must answer after watching</p>
+            <button
+              type="button"
+              className="btn-quiz"
+              onClick={() => navigate(`/videos/${id}/quiz`)}
+            >
+              Manage Quiz Questions &rarr;
+            </button>
+          </div>
+        )}
+
         <div className="form-actions">
           <button
             type="button"

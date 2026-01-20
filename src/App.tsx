@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import VideoListPage from './pages/videos/VideoListPage';
 import VideoFormPage from './pages/videos/VideoFormPage';
+import QuizBuilderPage from './pages/quiz/QuizBuilderPage';
 import './App.css';
 
 function App() {
@@ -42,6 +43,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <VideoFormPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/videos/:videoId/quiz"
+            element={
+              <ProtectedRoute>
+                <QuizBuilderPage />
               </ProtectedRoute>
             }
           />
