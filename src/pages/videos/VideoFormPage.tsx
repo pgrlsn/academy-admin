@@ -40,7 +40,7 @@ const VideoFormPage = () => {
   const [videoUploadProgress, setVideoUploadProgress] = useState(0);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
 
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+  const [, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailUploadProgress, setThumbnailUploadProgress] = useState(0);
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
 

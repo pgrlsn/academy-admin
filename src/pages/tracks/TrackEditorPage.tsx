@@ -16,7 +16,7 @@ const TrackEditorPage = () => {
   const navigate = useNavigate();
   const { deliveryType } = useParams<{ deliveryType: string }>();
 
-  const [track, setTrack] = useState<MandatoryTrack | null>(null);
+  const [, setTrack] = useState<MandatoryTrack | null>(null);
   const [availableVideos, setAvailableVideos] = useState<VideoSummary[]>([]);
   const [mandatoryVideos, setMandatoryVideos] = useState<VideoSummary[]>([]);
   const [loading, setLoading] = useState(true);

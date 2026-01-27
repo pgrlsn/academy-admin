@@ -222,7 +222,7 @@ const AnalyticsDashboardPage = () => {
                   </div>
                   <div
                     className="funnel-item"
-                    style={{ width: `${Math.max(30, (overview.inProgress + overview.completedTraining) / overview.totalRiders * 100)}%` }}
+                    style={{ width: `${Math.max(30, overview.totalRiders > 0 ? (overview.inProgress + overview.completedTraining) / overview.totalRiders * 100 : 0)}%` }}
                   >
                     <div className="funnel-bar started">
                       <span className="funnel-label">Started Training</span>
@@ -231,7 +231,7 @@ const AnalyticsDashboardPage = () => {
                   </div>
                   <div
                     className="funnel-item"
-                    style={{ width: `${Math.max(30, overview.completedTraining / overview.totalRiders * 100)}%` }}
+                    style={{ width: `${Math.max(30, overview.totalRiders > 0 ? overview.completedTraining / overview.totalRiders * 100 : 0)}%` }}
                   >
                     <div className="funnel-bar completed">
                       <span className="funnel-label">Completed</span>
@@ -345,7 +345,7 @@ const AnalyticsDashboardPage = () => {
                               <div className="progress-bar-mini">
                                 <div
                                   className="progress-fill-mini"
-                                  style={{ width: `${(rider.videosCompleted / rider.totalVideos) * 100}%` }}
+                                  style={{ width: `${rider.totalVideos > 0 ? (rider.videosCompleted / rider.totalVideos) * 100 : 0}%` }}
                                 />
                               </div>
                               <span>{rider.videosCompleted}/{rider.totalVideos}</span>

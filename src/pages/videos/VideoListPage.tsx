@@ -61,7 +61,8 @@ const VideoListPage = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(0);
-    fetchVideos();
+    // Fix #24: Don't call fetchVideos() explicitly — the useEffect will
+    // re-run after setPage(0) triggers a re-render with new page value
   };
 
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {

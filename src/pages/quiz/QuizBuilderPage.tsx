@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getVideoById, type Video } from '../../api/videos';
 import {
   getQuizQuestions,
   saveQuizQuestions,
   deleteQuizQuestion,
-  type QuizQuestion,
 } from '../../api/quiz';
 import './QuizBuilderPage.css';
 
@@ -81,21 +80,21 @@ const QuizBuilderPage = () => {
 
   const handleUpdateQuestion = (index: number, field: keyof LocalQuestion, value: unknown) => {
     const updated = [...questions];
-    (updated[index] as Record<string, unknown>)[field] = value;
-    updated[index].isDraft = true;
+    updated[index] = { ...updated[index], [field]: value, isDraft: true };
     setQuestions(updated);
   };
 
   const handleUpdateOption = (questionIndex: number, optionIndex: number, value: string) => {
     const updated = [...questions];
-    updated[questionIndex].options[optionIndex] = value;
-    updated[questionIndex].isDraft = true;
+    const newOptions = [...updated[questionIndex].options];
+    newOptions[optionIndex] = value;
+    updated[questionIndex] = { ...updated[questionIndex], options: newOptions, isDraft: true };
     setQuestions(updated);
   };
 
   const handleToggleEditing = (index: number) => {
     const updated = [...questions];
-    updated[index].isEditing = !updated[index].isEditing;
+    updated[index] = { ...updated[index], isEditing: !updated[index].isEditing };
     setQuestions(updated);
   };
 
@@ -184,12 +183,25 @@ const QuizBuilderPage = () => {
       setSaving(true);
       setError(null);
 
-      const questionsToSave = questions.map((q) => ({
-        questionText: q.questionText.trim(),
-        options: q.options.filter((opt) => opt.trim()),
-        correctOptionIndex: q.correctOptionIndex,
-        sequenceOrder: q.sequenceOrder,
-      }));
+      const questionsToSave = questions.map((q) => {
+        // Fix #12: Remap correctOptionIndex after filtering empty options
+        const filteredOptions: string[] = [];
+        let newCorrectIndex = 0;
+        q.options.forEach((opt, origIndex) => {
+          if (opt.trim()) {
+            if (origIndex === q.correctOptionIndex) {
+              newCorrectIndex = filteredOptions.length;
+            }
+            filteredOptions.push(opt.trim());
+          }
+        });
+        return {
+          questionText: q.questionText.trim(),
+          options: filteredOptions,
+          correctOptionIndex: newCorrectIndex,
+          sequenceOrder: q.sequenceOrder,
+        };
+      });
 
       const savedQuestions = await saveQuizQuestions(parseInt(videoId, 10), questionsToSave);
 
