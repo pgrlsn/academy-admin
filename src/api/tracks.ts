@@ -26,11 +26,10 @@ export interface MandatoryTrackUpdateRequest {
 
 // Delivery types constants
 export const DELIVERY_TYPES = [
-  { value: 'AMAZON', label: 'Amazon' },
-  { value: 'BLUEDART', label: 'BlueDart' },
-  { value: 'DELHIVERY', label: 'Delhivery' },
-  { value: 'SWIGGY', label: 'Swiggy' },
-  { value: 'ZOMATO', label: 'Zomato' },
+  { value: 'FOOD', label: 'Food Delivery' },
+  { value: 'BIKE_TAXI', label: 'Bike Taxi' },
+  { value: 'FOOD_BIKE_TAXI', label: 'Food + Bike Taxi' },
+  { value: 'STORE', label: 'Store' },
 ];
 
 /**

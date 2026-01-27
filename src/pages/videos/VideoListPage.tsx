@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getVideos, deleteVideo, bulkUpdateVideoStatus, type Video } from '../../api/videos';
+import { DELIVERY_TYPES } from '../../api/tracks';
 import './VideoListPage.css';
 
 const VideoListPage = () => {
@@ -156,11 +157,9 @@ const VideoListPage = () => {
             className="filter-select"
           >
             <option value="">All Delivery Types</option>
-            <option value="AMAZON">Amazon</option>
-            <option value="BLUEDART">BlueDart</option>
-            <option value="DELHIVERY">Delhivery</option>
-            <option value="SWIGGY">Swiggy</option>
-            <option value="ZOMATO">Zomato</option>
+            {DELIVERY_TYPES.map((type) => (
+              <option key={type.value} value={type.value}>{type.label}</option>
+            ))}
           </select>
 
           <select

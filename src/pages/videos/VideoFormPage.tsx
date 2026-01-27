@@ -8,16 +8,8 @@ import {
   uploadThumbnail,
   type VideoCreateRequest,
 } from '../../api/videos';
+import { DELIVERY_TYPES } from '../../api/tracks';
 import './VideoFormPage.css';
-
-const DELIVERY_TYPES = [
-  { value: 'AMAZON', label: 'Amazon' },
-  { value: 'BLUEDART', label: 'BlueDart' },
-  { value: 'DELHIVERY', label: 'Delhivery' },
-  { value: 'SWIGGY', label: 'Swiggy' },
-  { value: 'ZOMATO', label: 'Zomato' },
-  { value: 'COMMON', label: 'Common (All)' },
-];
 
 const VideoFormPage = () => {
   const navigate = useNavigate();
