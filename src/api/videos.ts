@@ -91,7 +91,7 @@ export const uploadVideo = async (
   onProgress?: (progress: number) => void
 ): Promise<VideoUploadResponse> => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append('video', file);  // Backend expects 'video' parameter
 
   const response = await apiClient.post('/academy/admin/videos/upload', formData, {
     headers: {
