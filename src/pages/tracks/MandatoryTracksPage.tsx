@@ -48,6 +48,9 @@ const MandatoryTracksPage = () => {
   return (
     <div className="tracks-page">
       <div className="page-header">
+        <button className="btn-back" onClick={() => navigate('/')}>
+          &larr; Back to Dashboard
+        </button>
         <h1>Mandatory Training Tracks</h1>
         <p className="page-description">
           Configure which videos are mandatory for each delivery type and their order.

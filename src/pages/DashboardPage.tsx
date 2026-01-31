@@ -43,11 +43,11 @@ const DashboardPage: React.FC = () => {
             <p>Upload, edit, and organize training videos</p>
           </div>
 
-          <div className="feature-card">
+          <div className="feature-card clickable" onClick={() => navigate('/videos')}>
             <div className="feature-icon">Quiz</div>
             <h3>Quiz Builder</h3>
             <p>Create and manage quiz questions for videos</p>
-            <span className="hint-text">Access via Video Management</span>
+            <span className="hint-text">Select a video to manage its quiz</span>
           </div>
 
           <div className="feature-card clickable" onClick={() => navigate('/tracks')}>

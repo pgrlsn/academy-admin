@@ -21,6 +21,23 @@
   font-size: 14px;
 }
 
+.btn-back {
+  background: none;
+  border: none;
+  color: #43419e;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-back:hover {
+  text-decoration: underline;
+}
+
 .btn-primary {
   background-color: #43419e;
   color: white;
@@ -370,6 +387,35 @@
 
 .btn-danger:not(:disabled):hover {
   background-color: #b91c1c;
+}
+
+.btn-icon.btn-deactivate {
+  color: #d97706;
+  border-color: #fcd34d;
+}
+
+.btn-icon.btn-deactivate:hover {
+  background-color: #fffbeb;
+  border-color: #d97706;
+}
+
+.btn-warning {
+  background-color: #d97706;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-warning:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-warning:not(:disabled):hover {
+  background-color: #b45309;
 }
 
 @media (max-width: 768px) {

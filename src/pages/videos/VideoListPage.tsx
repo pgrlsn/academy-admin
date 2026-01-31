@@ -129,6 +129,9 @@ const VideoListPage = () => {
     <div className="video-list-page">
       <div className="page-header">
         <div>
+          <button className="btn-back" onClick={() => navigate('/')}>
+            &larr; Back to Dashboard
+          </button>
           <h1>Video Management</h1>
           <p className="subtitle">Manage training videos for rider academy</p>
         </div>
@@ -270,11 +273,11 @@ const VideoListPage = () => {
                             Edit
                           </button>
                           <button
-                            className="btn-icon btn-danger"
+                            className="btn-icon btn-deactivate"
                             onClick={() => handleDeleteClick(video)}
-                            title="Delete"
+                            title="Deactivate"
                           >
-                            Delete
+                            Deactivate
                           </button>
                         </div>
                       </td>
@@ -313,13 +316,13 @@ const VideoListPage = () => {
         </>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Deactivate Confirmation Modal */}
       {deleteModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
-            <h3>Delete Video</h3>
-            <p>Are you sure you want to delete "{videoToDelete?.title}"?</p>
-            <p className="modal-note">This will hide the video from riders. You can reactivate it later.</p>
+            <h3>Deactivate Video</h3>
+            <p>Are you sure you want to deactivate "{videoToDelete?.title}"?</p>
+            <p className="modal-note">This will hide the video from riders. You can reactivate it later using the bulk actions.</p>
             <div className="modal-actions">
               <button
                 className="btn-secondary"
@@ -329,11 +332,11 @@ const VideoListPage = () => {
                 Cancel
               </button>
               <button
-                className="btn-danger"
+                className="btn-warning"
                 onClick={handleConfirmDelete}
                 disabled={deleting}
               >
-                {deleting ? 'Deleting...' : 'Delete'}
+                {deleting ? 'Deactivating...' : 'Deactivate'}
               </button>
             </div>
           </div>
