@@ -1,4 +1,5 @@
 import apiClient from './client';
+import { type VideoTranslation } from './translations';
 
 export interface Video {
   id: number;
@@ -11,6 +12,9 @@ export interface Video {
   isMandatory: boolean;
   isActive: boolean;
   deliveryTypes: string[];
+  primaryLanguage?: string;
+  translations?: VideoTranslation[];
+  availableLanguages?: string[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -23,6 +27,7 @@ export interface VideoCreateRequest {
   thumbnailUrl?: string;
   isActive: boolean;
   deliveryTypes: string[];
+  primaryLanguage?: string;
 }
 
 export interface VideoUpdateRequest extends VideoCreateRequest {

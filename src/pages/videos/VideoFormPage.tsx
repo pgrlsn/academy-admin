@@ -9,6 +9,16 @@ import {
   type VideoCreateRequest,
 } from '../../api/videos';
 import { DELIVERY_TYPES } from '../../api/tracks';
+import {
+  SUPPORTED_LANGUAGES,
+  getLanguageName,
+  getVideoTranslations,
+  createVideoTranslation,
+  updateVideoTranslation,
+  deleteVideoTranslation,
+  type VideoTranslation,
+} from '../../api/translations';
+import VideoTranslationModal from './VideoTranslationModal';
 import './VideoFormPage.css';
 
 const VideoFormPage = () => {
@@ -24,6 +34,13 @@ const VideoFormPage = () => {
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [isActive, setIsActive] = useState(true);
   const [deliveryTypes, setDeliveryTypes] = useState<string[]>([]);
+  const [primaryLanguage, setPrimaryLanguage] = useState('en');
+
+  // Translation state
+  const [translations, setTranslations] = useState<VideoTranslation[]>([]);
+  const [showTranslationModal, setShowTranslationModal] = useState(false);
+  const [editingTranslation, setEditingTranslation] = useState<VideoTranslation | undefined>();
+  const [translationsLoading, setTranslationsLoading] = useState(false);
 
   // Upload state
   const [videoFile, setVideoFile] = useState<File | null>(null);
@@ -53,6 +70,18 @@ const VideoFormPage = () => {
           setThumbnailUrl(video.thumbnailUrl || '');
           setIsActive(video.isActive);
           setDeliveryTypes(video.deliveryTypes || []);
+          setPrimaryLanguage(video.primaryLanguage || 'en');
+
+          // Fetch translations
+          setTranslationsLoading(true);
+          try {
+            const videoTranslations = await getVideoTranslations(parseInt(id, 10));
+            setTranslations(videoTranslations);
+          } catch (err) {
+            console.error('Failed to fetch translations:', err);
+          } finally {
+            setTranslationsLoading(false);
+          }
         } catch (err) {
           console.error('Failed to fetch video:', err);
           setError('Failed to load video. Please try again.');
@@ -150,6 +179,7 @@ const VideoFormPage = () => {
       thumbnailUrl: thumbnailUrl || undefined,
       isActive,
       deliveryTypes,
+      primaryLanguage,
     };
 
     try {
@@ -166,6 +196,52 @@ const VideoFormPage = () => {
       setSaving(false);
     }
   };
+
+  const handleAddTranslation = () => {
+    setEditingTranslation(undefined);
+    setShowTranslationModal(true);
+  };
+
+  const handleEditTranslation = (translation: VideoTranslation) => {
+    setEditingTranslation(translation);
+    setShowTranslationModal(true);
+  };
+
+  const handleSaveTranslation = async (translation: VideoTranslation) => {
+    if (!id) return;
+
+    try {
+      if (translation.id) {
+        const updated = await updateVideoTranslation(parseInt(id, 10), translation.id, translation);
+        setTranslations((prev) =>
+          prev.map((t) => (t.id === updated.id ? updated : t))
+        );
+      } else {
+        const created = await createVideoTranslation(parseInt(id, 10), translation);
+        setTranslations((prev) => [...prev, created]);
+      }
+      setShowTranslationModal(false);
+      setEditingTranslation(undefined);
+    } catch (err) {
+      console.error('Failed to save translation:', err);
+      setError('Failed to save translation. Please try again.');
+    }
+  };
+
+  const handleDeleteTranslation = async (translationId: number) => {
+    if (!id) return;
+    if (!window.confirm('Are you sure you want to delete this translation?')) return;
+
+    try {
+      await deleteVideoTranslation(parseInt(id, 10), translationId);
+      setTranslations((prev) => prev.filter((t) => t.id !== translationId));
+    } catch (err) {
+      console.error('Failed to delete translation:', err);
+      setError('Failed to delete translation. Please try again.');
+    }
+  };
+
+  const existingLanguages = translations.map((t) => t.language);
 
   if (loading) {
     return (
@@ -211,6 +287,22 @@ const VideoFormPage = () => {
               placeholder="Enter video description"
               rows={4}
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="primaryLanguage">Primary Language</label>
+            <select
+              id="primaryLanguage"
+              value={primaryLanguage}
+              onChange={(e) => setPrimaryLanguage(e.target.value)}
+            >
+              {SUPPORTED_LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.name}
+                </option>
+              ))}
+            </select>
+            <p className="field-hint">The language of the main video content above</p>
           </div>
         </div>
 
@@ -320,6 +412,59 @@ const VideoFormPage = () => {
         </div>
 
         {isEditMode && id && (
+          <div className="form-section translations-section">
+            <h2>Translations</h2>
+            <p className="section-hint">Add video content in other languages</p>
+
+            {translationsLoading ? (
+              <div className="translations-loading">Loading translations...</div>
+            ) : (
+              <>
+                {translations.length > 0 ? (
+                  <div className="translations-list">
+                    {translations.map((t) => (
+                      <div key={t.id} className="translation-item">
+                        <div className="translation-info">
+                          <span className="language-badge">{t.language.toUpperCase()}</span>
+                          <span className="translation-title">{t.title}</span>
+                        </div>
+                        <div className="translation-actions">
+                          <button
+                            type="button"
+                            className="btn-edit-small"
+                            onClick={() => handleEditTranslation(t)}
+                          >
+                            Edit
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-delete-small"
+                            onClick={() => t.id && handleDeleteTranslation(t.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="no-translations">No translations added yet.</p>
+                )}
+
+                <button
+                  type="button"
+                  className="btn-add-translation"
+                  onClick={handleAddTranslation}
+                  disabled={existingLanguages.length >= SUPPORTED_LANGUAGES.length - 1}
+                >
+                  + Add Translation
+                </button>
+              </>
+            )}
+          </div>
+        )}
+
+        {isEditMode && id && (
           <div className="form-section quiz-section">
             <h2>Quiz Questions</h2>
             <p className="section-hint">Add quiz questions that riders must answer after watching</p>
@@ -351,6 +496,20 @@ const VideoFormPage = () => {
           </button>
         </div>
       </form>
+
+      {showTranslationModal && id && (
+        <VideoTranslationModal
+          videoId={parseInt(id, 10)}
+          primaryLanguage={primaryLanguage}
+          existingLanguages={existingLanguages}
+          translation={editingTranslation}
+          onSave={handleSaveTranslation}
+          onClose={() => {
+            setShowTranslationModal(false);
+            setEditingTranslation(undefined);
+          }}
+        />
+      )}
     </div>
   );
 };
