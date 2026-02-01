@@ -11,7 +11,6 @@ import {
 import { DELIVERY_TYPES } from '../../api/tracks';
 import {
   SUPPORTED_LANGUAGES,
-  getLanguageName,
   getVideoTranslations,
   createVideoTranslation,
   updateVideoTranslation,

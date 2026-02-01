@@ -9,7 +9,11 @@ export interface Video {
   videoUrl: string;
   thumbnailUrl?: string;
   sequenceOrder: number;
-  isMandatory: boolean;
+  /**
+   * Whether this video is required for training completion.
+   * Determined by mandatory track membership, not stored on the video.
+   */
+  isRequired?: boolean;
   isActive: boolean;
   deliveryTypes: string[];
   primaryLanguage?: string;
