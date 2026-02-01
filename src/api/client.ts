@@ -1,7 +1,9 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://api-staging-automation.staffpay.in';
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api'
+  : (import.meta.env.VITE_API_BASE_URL || 'https://api-staging.staffpay.in');
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

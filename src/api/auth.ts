@@ -3,8 +3,8 @@ import type { LoginRequest, LoginResponse, OtpResponse } from '../types/auth';
 
 export const authApi = {
   sendOtp: async (phoneNumber: string): Promise<OtpResponse> => {
-    const response = await apiClient.post('/auth/otp/generate', {
-      number: phoneNumber,
+    const response = await apiClient.get(`/auth/sendOtp/${phoneNumber}`, {
+      params: { source: 'desktop' },
     });
     return response.data;
   },
@@ -12,15 +12,15 @@ export const authApi = {
   login: async (loginRequest: LoginRequest): Promise<LoginResponse> => {
     const response = await apiClient.post('/auth/login', {
       ...loginRequest,
-      loginFrom: 'ACADEMY_ADMIN',
+      loginFrom: 'desktop',
     });
     return response.data;
   },
 
   validateToken: async (): Promise<boolean> => {
     try {
-      const response = await apiClient.get('/auth/validate');
-      return response.data?.status?.code === 200;
+      const response = await apiClient.get('/auth/fetchCurrentUser');
+      return response.data?.id != null;
     } catch {
       return false;
     }

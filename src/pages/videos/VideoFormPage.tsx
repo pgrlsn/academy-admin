@@ -31,6 +31,7 @@ const VideoFormPage = () => {
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [videoUrl, setVideoUrl] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
+  const [sequenceOrder, setSequenceOrder] = useState(1);
   const [isActive, setIsActive] = useState(true);
   const [deliveryTypes, setDeliveryTypes] = useState<string[]>([]);
   const [primaryLanguage, setPrimaryLanguage] = useState('en');
@@ -67,6 +68,7 @@ const VideoFormPage = () => {
           setDurationSeconds(video.durationSeconds);
           setVideoUrl(video.videoUrl);
           setThumbnailUrl(video.thumbnailUrl || '');
+          setSequenceOrder(video.sequenceOrder || 1);
           setIsActive(video.isActive);
           setDeliveryTypes(video.deliveryTypes || []);
           setPrimaryLanguage(video.primaryLanguage || 'en');
@@ -176,6 +178,7 @@ const VideoFormPage = () => {
       durationSeconds,
       videoUrl,
       thumbnailUrl: thumbnailUrl || undefined,
+      sequenceOrder,
       isActive,
       deliveryTypes,
       primaryLanguage,
@@ -286,6 +289,19 @@ const VideoFormPage = () => {
               placeholder="Enter video description"
               rows={4}
             />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="sequenceOrder">Sequence Order *</label>
+            <input
+              type="number"
+              id="sequenceOrder"
+              value={sequenceOrder}
+              onChange={(e) => setSequenceOrder(parseInt(e.target.value, 10) || 1)}
+              min={1}
+              placeholder="Display order (1, 2, 3...)"
+            />
+            <p className="field-hint">Videos are displayed to riders in this order</p>
           </div>
 
           <div className="form-group">

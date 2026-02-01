@@ -2,7 +2,7 @@ export interface User {
   id: number;
   name: string;
   contactNumber: string;
-  role: string;
+  role: number;
   organizationId: number;
   organizationName?: string;
   token?: string;

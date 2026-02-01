@@ -5,8 +5,8 @@ import { authApi } from '../api/auth';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// Admin roles that are allowed to access the CMS
-const ALLOWED_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_OPS'];
+// Admin role IDs that are allowed to access the CMS
+const ALLOWED_ROLE_IDS = [2, 4, 8, 9]; // ADMIN, ADMIN_READ_ONLY, OPS_ADMIN, SUPER_ADMIN
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = (newToken: string, newUser: User) => {
     // Check if user has admin role
-    if (!ALLOWED_ROLES.includes(newUser.role)) {
+    if (!ALLOWED_ROLE_IDS.includes(newUser.role)) {
       throw new Error('Access denied. Admin role required.');
     }
 

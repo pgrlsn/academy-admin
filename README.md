@@ -1,73 +1,98 @@
-# React + TypeScript + Vite
+# Academy Admin
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript web portal for managing Rider Training Module content. Allows admins to manage training videos, quizzes, mandatory tracks, and view rider analytics.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 18 + TypeScript
+- Vite (build tool)
+- React Router (routing)
+- Axios (HTTP client)
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+
+- Backend: `academy-service` running (part of titan-backend)
+- Auth: Shared auth-service (OTP-based login via `GET /auth/sendOtp/{number}`)
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+npm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Copy environment config
+cp .env.example .env
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start dev server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app runs at `http://localhost:5173/`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment Variables
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `VITE_API_BASE_URL` | Backend API base URL | `https://api-staging.staffpay.in` |
+
+In development, Vite proxies `/api/*` requests to `VITE_API_BASE_URL` to avoid CORS issues. In production, the app calls `VITE_API_BASE_URL` directly.
+
+## Authentication
+
+Uses the shared Titan auth-service with OTP-based login:
+
+1. `GET /auth/sendOtp/{phone}?source=desktop` — sends 4-digit OTP
+2. `POST /auth/login` with `{ number, otp, referenceId, loginFrom: "desktop" }` — returns JWT token
+
+The `desktop` source maps to admin users with `allow_desktop_login = TRUE` in the users database. Allowed roles: `ROLE_ADMIN` (2), `ROLE_ADMIN_READ_ONLY` (4), `ROLE_OPS_ADMIN` (8), `ROLE_SUPER_ADMIN` (9).
+
+The JWT token is stored in `localStorage` and sent as an `authtoken` header on all API requests.
+
+## Backend AWS Requirements
+
+The academy-service uses AWS for video/thumbnail storage. See [`academy-service/README.md`](../titan-backend/DeliveryExecutiveWebApp/academy-service/README.md) for full setup.
+
+**Summary:**
+
+| Resource | Purpose | Required For |
+|----------|---------|-------------|
+| **S3 Bucket** (`titan-academy-videos`) | Video & thumbnail storage | Uploading video files |
+| **CloudFront Distribution** | CDN for video delivery | Playing videos in rider app |
+| **IAM Credentials** | S3 access | Upload/delete operations |
+
+AWS is **not required** for: listing videos, creating metadata, quiz management, analytics, or any database-only operations.
+
+**Environment variables** (set on the academy-service deployment):
+
+```
+AWS_S3_BUCKET_NAME=titan-academy-videos
+AWS_REGION=ap-south-1
+AWS_CLOUDFRONT_DOMAIN=<your-distribution>.cloudfront.net
+AWS_ACCESS_KEY_ID=<key>           # or use IAM instance role
+AWS_SECRET_ACCESS_KEY=<secret>    # or use IAM instance role
+```
+
+## Project Structure
+
+```
+src/
+  api/           # Axios API clients (auth, videos, quiz, analytics)
+  components/    # Shared components (ProtectedRoute, Layout)
+  contexts/      # React contexts (AuthContext)
+  pages/         # Page components
+    LoginPage.tsx
+    DashboardPage.tsx
+    videos/      # Video CRUD pages
+    quiz/        # Quiz builder
+    tracks/      # Mandatory track editor
+    analytics/   # Analytics dashboard
+  types/         # TypeScript type definitions
+```
+
+## Build
+
+```bash
+npm run build    # Production build to dist/
+npm run preview  # Preview production build locally
 ```
