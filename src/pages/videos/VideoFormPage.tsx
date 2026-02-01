@@ -94,6 +94,27 @@ const VideoFormPage = () => {
     }
   }, [isEditMode, id]);
 
+  // Extract video duration from file using HTML5 Video API
+  const extractVideoDuration = useCallback((file: File): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+
+      video.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(video.src);
+        const duration = Math.round(video.duration);
+        resolve(duration);
+      };
+
+      video.onerror = () => {
+        window.URL.revokeObjectURL(video.src);
+        reject(new Error('Failed to load video metadata'));
+      };
+
+      video.src = URL.createObjectURL(file);
+    });
+  }, []);
+
   const handleVideoFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -104,14 +125,15 @@ const VideoFormPage = () => {
     setError(null);
 
     try {
+      // Extract duration from file before uploading
+      const duration = await extractVideoDuration(file);
+      setDurationSeconds(duration);
+
       const response = await uploadVideo(file, (progress) => {
         setVideoUploadProgress(progress);
       });
 
       setVideoUrl(response.videoUrl);
-      if (response.durationSeconds) {
-        setDurationSeconds(response.durationSeconds);
-      }
       if (response.thumbnailUrl && !thumbnailUrl) {
         setThumbnailUrl(response.thumbnailUrl);
       }
@@ -121,7 +143,7 @@ const VideoFormPage = () => {
     } finally {
       setIsUploadingVideo(false);
     }
-  }, [thumbnailUrl]);
+  }, [thumbnailUrl, extractVideoDuration]);
 
   const handleThumbnailFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -370,10 +392,10 @@ const VideoFormPage = () => {
               value={durationSeconds}
               onChange={(e) => setDurationSeconds(parseInt(e.target.value, 10) || 0)}
               min={1}
-              placeholder="Enter video duration in seconds"
+              placeholder="Auto-detected from video"
             />
             <p className="field-hint">
-              Required for quiz unlock calculation (riders must watch 90% to take quiz)
+              Auto-detected when video is uploaded. Riders must watch 90% to unlock quiz.
             </p>
           </div>
 
