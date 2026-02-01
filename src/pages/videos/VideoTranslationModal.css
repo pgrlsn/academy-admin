@@ -1,3 +1,8 @@
+/* ============================================
+   VideoTranslationModal - Neo-Industrial Editorial Design
+   Translation management modal
+   ============================================ */
+
 .translation-modal-overlay {
   position: fixed;
   top: 0;
@@ -5,201 +10,267 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: var(--z-modal-backdrop);
+  animation: fadeIn var(--transition-fast) ease-out;
 }
 
 .translation-modal {
-  background: white;
-  border-radius: 12px;
+  background: var(--color-surface);
+  border-radius: var(--radius-xl);
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn var(--transition-base) var(--spring);
 }
 
+/* Modal Header */
 .translation-modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: var(--space-5) var(--space-6);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .translation-modal-header h2 {
+  font-family: var(--font-display);
   margin: 0;
-  font-size: 1.25rem;
-  color: #1a1a1a;
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-primary);
 }
 
 .translation-modal-header .btn-close {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: var(--text-h2);
   cursor: pointer;
-  color: #666;
+  color: var(--color-text-muted);
   padding: 0;
-  line-height: 1;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
 }
 
 .translation-modal-header .btn-close:hover {
-  color: #1a1a1a;
+  color: var(--color-text-primary);
+  background-color: var(--color-elevated);
 }
 
+/* Error Message */
 .translation-error {
-  margin: 16px 24px 0;
-  padding: 12px 16px;
-  background-color: #fee2e2;
-  border: 1px solid #ef4444;
-  color: #b91c1c;
-  border-radius: 8px;
-  font-size: 14px;
+  margin: var(--space-4) var(--space-6) 0;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  border-left: 4px solid var(--color-error);
+  color: var(--color-error);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-small);
+  animation: slideUp var(--transition-fast) ease-out;
 }
 
+/* Translation Form */
 .translation-form {
-  padding: 24px;
+  padding: var(--space-6);
 }
 
 .translation-form .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--space-5);
+}
+
+.translation-form .form-group:last-child {
+  margin-bottom: 0;
 }
 
 .translation-form label {
   display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 6px;
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
 }
 
 .translation-form input[type="text"],
 .translation-form textarea,
 .translation-form select {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: border-color 0.2s ease;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--text-small);
+  font-family: var(--font-body);
+  transition: all var(--transition-fast);
+  background-color: var(--color-surface);
 }
 
 .translation-form input[type="text"]:focus,
 .translation-form textarea:focus,
 .translation-form select:focus {
   outline: none;
-  border-color: #43419e;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.translation-form textarea {
+  resize: vertical;
+  min-height: 80px;
 }
 
 .translation-form .language-display {
-  background-color: #f3f4f6;
-  color: #6b7280;
+  background-color: var(--color-elevated);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
 }
 
+/* File Upload Area */
 .translation-form .file-upload-area {
-  border: 2px dashed #d1d5db;
-  border-radius: 8px;
-  padding: 20px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
   text-align: center;
-  transition: border-color 0.2s ease;
+  background: var(--color-elevated);
+  transition: all var(--transition-fast);
 }
 
 .translation-form .file-upload-area:hover {
-  border-color: #43419e;
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-50);
 }
 
 .translation-form .upload-hint {
-  margin: 8px 0 0;
-  font-size: 13px;
-  color: #9ca3af;
+  margin: var(--space-2) 0 0;
+  font-size: var(--text-small);
+  color: var(--color-text-muted);
 }
 
+/* Upload Progress */
 .translation-form .upload-progress {
-  margin-top: 12px;
+  margin-top: var(--space-4);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-3);
 }
 
 .translation-form .progress-bar {
   flex: 1;
   height: 8px;
-  background-color: #e5e7eb;
-  border-radius: 4px;
+  background-color: var(--color-border);
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .translation-form .progress-fill {
   height: 100%;
-  background-color: #43419e;
-  transition: width 0.3s ease;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  transition: width var(--transition-base);
+  border-radius: var(--radius-full);
 }
 
 .translation-form .file-info {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #6b7280;
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
 }
 
 .translation-form .current-url {
-  margin-top: 8px;
-  font-size: 13px;
-  color: #6b7280;
+  margin-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--color-text-secondary);
 }
 
 .translation-form .current-url a {
-  color: #43419e;
+  color: var(--color-primary);
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 .translation-form .current-url a:hover {
+  color: var(--color-primary-dark);
   text-decoration: underline;
 }
 
+/* Modal Actions */
 .translation-modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid #e5e7eb;
-  margin-top: 20px;
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-light);
+  margin-top: var(--space-6);
 }
 
 .translation-modal-actions .btn-secondary {
-  padding: 10px 20px;
-  background: #6b7280;
-  color: white;
-  border: none;
-  border-radius: 6px;
+  background-color: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-size: var(--text-small);
+  font-weight: var(--weight-medium);
+  transition: all var(--transition-fast);
 }
 
 .translation-modal-actions .btn-secondary:hover:not(:disabled) {
-  background-color: #5a6268;
+  background-color: var(--color-elevated);
+  border-color: var(--color-text-secondary);
 }
 
 .translation-modal-actions .btn-primary {
-  padding: 10px 20px;
-  background-color: #43419e;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
   border: none;
-  border-radius: 6px;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
+  font-size: var(--text-small);
+  font-weight: var(--weight-semibold);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
 .translation-modal-actions .btn-primary:hover:not(:disabled) {
-  background-color: #352f7e;
+  background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
 .translation-modal-actions button:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .translation-modal {
+    width: 95%;
+  }
+
+  .translation-form {
+    padding: var(--space-4);
+  }
+
+  .translation-modal-header {
+    padding: var(--space-4);
+  }
+
+  .translation-modal-actions {
+    flex-direction: column;
+  }
+
+  .translation-modal-actions button {
+    width: 100%;
+  }
 }
