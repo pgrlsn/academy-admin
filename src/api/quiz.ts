@@ -20,7 +20,7 @@ export interface QuizQuestionCreateRequest {
 
 // Fetch quiz questions for a video
 export const getQuizQuestions = async (videoId: number): Promise<QuizQuestion[]> => {
-  const response = await apiClient.get(`/academy/admin/videos/${videoId}/quiz`);
+  const response = await apiClient.get(`/academy/admin/quiz/video/${videoId}`);
   return response.data;
 };
 
@@ -43,11 +43,11 @@ export const deleteQuizQuestion = async (id: number): Promise<void> => {
 
 // Reorder quiz questions
 export const reorderQuizQuestions = async (videoId: number, questionIds: number[]): Promise<void> => {
-  await apiClient.post(`/academy/admin/videos/${videoId}/quiz/reorder`, { questionIds });
+  await apiClient.post(`/academy/admin/quiz/video/${videoId}/reorder`, { questionIds });
 };
 
 // Bulk create/update questions
 export const saveQuizQuestions = async (videoId: number, questions: Omit<QuizQuestion, 'id' | 'videoId' | 'isActive'>[]): Promise<QuizQuestion[]> => {
-  const response = await apiClient.post(`/academy/admin/videos/${videoId}/quiz/bulk`, { questions });
+  const response = await apiClient.post(`/academy/admin/quiz/video/${videoId}/bulk`, questions);
   return response.data;
 };

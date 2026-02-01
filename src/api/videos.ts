@@ -21,8 +21,6 @@ export interface VideoCreateRequest {
   durationSeconds: number;
   videoUrl: string;
   thumbnailUrl?: string;
-  sequenceOrder: number;
-  isMandatory: boolean;
   isActive: boolean;
   deliveryTypes: string[];
 }

@@ -22,8 +22,6 @@ const VideoFormPage = () => {
   const [durationSeconds, setDurationSeconds] = useState(0);
   const [videoUrl, setVideoUrl] = useState('');
   const [thumbnailUrl, setThumbnailUrl] = useState('');
-  const [sequenceOrder, setSequenceOrder] = useState(1);
-  const [isMandatory, setIsMandatory] = useState(true);
   const [isActive, setIsActive] = useState(true);
   const [deliveryTypes, setDeliveryTypes] = useState<string[]>([]);
 
@@ -53,8 +51,6 @@ const VideoFormPage = () => {
           setDurationSeconds(video.durationSeconds);
           setVideoUrl(video.videoUrl);
           setThumbnailUrl(video.thumbnailUrl || '');
-          setSequenceOrder(video.sequenceOrder);
-          setIsMandatory(video.isMandatory);
           setIsActive(video.isActive);
           setDeliveryTypes(video.deliveryTypes || []);
         } catch (err) {
@@ -152,8 +148,6 @@ const VideoFormPage = () => {
       durationSeconds,
       videoUrl,
       thumbnailUrl: thumbnailUrl || undefined,
-      sequenceOrder,
-      isMandatory,
       isActive,
       deliveryTypes,
     };
@@ -217,31 +211,6 @@ const VideoFormPage = () => {
               placeholder="Enter video description"
               rows={4}
             />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="sequenceOrder">Sequence Order</label>
-              <input
-                type="number"
-                id="sequenceOrder"
-                value={sequenceOrder}
-                onChange={(e) => setSequenceOrder(parseInt(e.target.value, 10) || 1)}
-                min={1}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="duration">Duration (seconds)</label>
-              <input
-                type="number"
-                id="duration"
-                value={durationSeconds}
-                onChange={(e) => setDurationSeconds(parseInt(e.target.value, 10) || 0)}
-                min={0}
-                placeholder="Auto-detected from video"
-              />
-            </div>
           </div>
         </div>
 
@@ -336,27 +305,18 @@ const VideoFormPage = () => {
             <label className="toggle-item">
               <input
                 type="checkbox"
-                checked={isMandatory}
-                onChange={(e) => setIsMandatory(e.target.checked)}
-              />
-              <span className="toggle-label">
-                <strong>Mandatory Video</strong>
-                <small>Riders must complete this video to start accepting orders</small>
-              </span>
-            </label>
-
-            <label className="toggle-item">
-              <input
-                type="checkbox"
                 checked={isActive}
                 onChange={(e) => setIsActive(e.target.checked)}
               />
               <span className="toggle-label">
                 <strong>Active</strong>
-                <small>Video is visible to riders</small>
+                <small>Video is visible to riders. Deactivate to hide without deleting.</small>
               </span>
             </label>
           </div>
+          <p className="section-hint" style={{ marginTop: '12px' }}>
+            To make this video mandatory, add it to a Mandatory Track after saving.
+          </p>
         </div>
 
         {isEditMode && id && (

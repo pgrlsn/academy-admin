@@ -119,12 +119,6 @@ const VideoListPage = () => {
     }
   };
 
-  const formatDuration = (seconds: number): string => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="video-list-page">
       <div className="page-header">
@@ -212,7 +206,6 @@ const VideoListPage = () => {
                   </th>
                   <th>Thumbnail</th>
                   <th>Title</th>
-                  <th>Duration</th>
                   <th>Delivery Types</th>
                   <th>Status</th>
                   <th>Actions</th>
@@ -221,7 +214,7 @@ const VideoListPage = () => {
               <tbody>
                 {videos.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="no-data">No videos found</td>
+                    <td colSpan={6} className="no-data">No videos found</td>
                   </tr>
                 ) : (
                   videos.map((video) => (
@@ -250,7 +243,6 @@ const VideoListPage = () => {
                           <div className="video-description">{video.description}</div>
                         )}
                       </td>
-                      <td>{formatDuration(video.durationSeconds)}</td>
                       <td>
                         <div className="delivery-types">
                           {video.deliveryTypes?.map((type) => (
