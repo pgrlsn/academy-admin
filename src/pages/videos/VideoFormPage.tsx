@@ -164,6 +164,10 @@ const VideoFormPage = () => {
       setError('Video URL is required. Please upload a video.');
       return;
     }
+    if (!durationSeconds || durationSeconds <= 0) {
+      setError('Video duration is required and must be greater than 0');
+      return;
+    }
     if (deliveryTypes.length === 0) {
       setError('At least one delivery type must be selected');
       return;
@@ -356,6 +360,21 @@ const VideoFormPage = () => {
                 </a>
               </div>
             )}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="durationSeconds">Video Duration (seconds) *</label>
+            <input
+              type="number"
+              id="durationSeconds"
+              value={durationSeconds}
+              onChange={(e) => setDurationSeconds(parseInt(e.target.value, 10) || 0)}
+              min={1}
+              placeholder="Enter video duration in seconds"
+            />
+            <p className="field-hint">
+              Required for quiz unlock calculation (riders must watch 90% to take quiz)
+            </p>
           </div>
 
           <div className="form-group">
