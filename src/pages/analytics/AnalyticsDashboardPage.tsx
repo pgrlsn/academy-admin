@@ -13,6 +13,7 @@ import {
   type AnalyticsFilters,
 } from '../../api/analytics';
 import { DELIVERY_TYPES } from '../../api/tracks';
+import RiderDetailModal from './RiderDetailModal';
 import './AnalyticsDashboardPage.css';
 
 const STATUS_OPTIONS = [
@@ -20,6 +21,17 @@ const STATUS_OPTIONS = [
   { value: 'COMPLETED', label: 'Completed' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
   { value: 'NOT_STARTED', label: 'Not Started' },
+];
+
+const CITY_OPTIONS = [
+  { value: '', label: 'All Cities' },
+  { value: 'Bangalore', label: 'Bangalore' },
+  { value: 'Delhi', label: 'Delhi' },
+  { value: 'Mumbai', label: 'Mumbai' },
+  { value: 'Chennai', label: 'Chennai' },
+  { value: 'Hyderabad', label: 'Hyderabad' },
+  { value: 'Pune', label: 'Pune' },
+  { value: 'Kolkata', label: 'Kolkata' },
 ];
 
 const AnalyticsDashboardPage = () => {
@@ -45,6 +57,7 @@ const AnalyticsDashboardPage = () => {
   const [filters, setFilters] = useState<AnalyticsFilters>({
     deliveryType: '',
     status: '',
+    city: '',
     startDate: '',
     endDate: '',
   });
@@ -52,6 +65,7 @@ const AnalyticsDashboardPage = () => {
   const [activeTab, setActiveTab] = useState<'overview' | 'riders' | 'videos'>('overview');
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedRiderId, setSelectedRiderId] = useState<number | null>(null);
 
   // Fetch overview metrics
   useEffect(() => {
@@ -277,6 +291,18 @@ const AnalyticsDashboardPage = () => {
               ))}
             </select>
 
+            <select
+              value={filters.city}
+              onChange={(e) => handleFilterChange('city', e.target.value)}
+              className="filter-select"
+            >
+              {CITY_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
             <input
               type="date"
               value={filters.startDate}
@@ -318,8 +344,11 @@ const AnalyticsDashboardPage = () => {
                     <tr>
                       <th>Rider ID</th>
                       <th>Name</th>
+                      <th>Delivery Type</th>
+                      <th>City</th>
                       <th>Status</th>
                       <th>Progress</th>
+                      <th>Quiz Attempts</th>
                       <th>Avg Score</th>
                       <th>Started</th>
                       <th>Completed</th>
@@ -328,13 +357,19 @@ const AnalyticsDashboardPage = () => {
                   <tbody>
                     {riders.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="empty-row">No riders found</td>
+                        <td colSpan={10} className="empty-row">No riders found</td>
                       </tr>
                     ) : (
                       riders.map((rider) => (
-                        <tr key={rider.riderId}>
+                        <tr
+                          key={rider.riderId}
+                          onClick={() => setSelectedRiderId(rider.riderId)}
+                          className="clickable-row"
+                        >
                           <td>{rider.riderId}</td>
                           <td>{rider.riderName}</td>
+                          <td>{rider.deliveryType || '-'}</td>
+                          <td>{rider.city || '-'}</td>
                           <td>
                             <span className={`status-badge ${getStatusColor(rider.status)}`}>
                               {rider.status.replace('_', ' ')}
@@ -351,6 +386,7 @@ const AnalyticsDashboardPage = () => {
                               <span>{rider.videosCompleted}/{rider.totalVideos}</span>
                             </div>
                           </td>
+                          <td>{rider.quizAttempts}</td>
                           <td>{rider.avgQuizScore !== null ? `${rider.avgQuizScore}%` : '-'}</td>
                           <td>{formatDate(rider.startedAt)}</td>
                           <td>{formatDate(rider.completedAt)}</td>
@@ -404,14 +440,15 @@ const AnalyticsDashboardPage = () => {
                     <th>Completions</th>
                     <th>Avg Watch %</th>
                     <th>Quiz Attempts</th>
-                    <th>Pass Rate</th>
+                    <th>1st Attempt Pass Rate</th>
+                    <th>Overall Pass Rate</th>
                     <th>Avg Score</th>
                   </tr>
                 </thead>
                 <tbody>
                   {videoAnalytics.length === 0 ? (
                     <tr>
-                      <td colSpan={8} className="empty-row">No videos found</td>
+                      <td colSpan={9} className="empty-row">No videos found</td>
                     </tr>
                   ) : (
                     videoAnalytics.map((video) => (
@@ -422,6 +459,7 @@ const AnalyticsDashboardPage = () => {
                         <td>{video.completions}</td>
                         <td>{video.avgWatchPercentage}%</td>
                         <td>{video.quizAttempts}</td>
+                        <td>{video.firstAttemptPassRate}%</td>
                         <td>{video.quizPassRate}%</td>
                         <td>{video.avgQuizScore}%</td>
                       </tr>
@@ -432,6 +470,14 @@ const AnalyticsDashboardPage = () => {
             </div>
           )}
         </div>
+      )}
+
+      {/* Rider Detail Modal */}
+      {selectedRiderId && (
+        <RiderDetailModal
+          riderId={selectedRiderId}
+          onClose={() => setSelectedRiderId(null)}
+        />
       )}
     </div>
   );

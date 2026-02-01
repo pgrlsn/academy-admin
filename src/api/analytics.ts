@@ -17,9 +17,11 @@ export interface RiderProgressSummary {
   riderName: string;
   contactNumber: string;
   deliveryType: string;
+  city: string;
   status: string;
   videosCompleted: number;
   totalVideos: number;
+  quizAttempts: number;
   avgQuizScore: number | null;
   startedAt: string | null;
   completedAt: string | null;
@@ -45,13 +47,42 @@ export interface VideoAnalytics {
   quizPasses: number;
   quizPassRate: number;
   avgQuizScore: number;
+  firstAttemptPassRate: number;
 }
 
 export interface AnalyticsFilters {
   deliveryType?: string;
   status?: string;
+  city?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface VideoProgressDetail {
+  videoId: number;
+  videoTitle: string;
+  status: string;
+  watchedPercentage: number;
+  language: string;
+  quizAttempts: number;
+  quizScore: number | null;
+  quizPassed: boolean | null;
+  startedAt: string | null;
+  completedAt: string | null;
+}
+
+export interface RiderDetailedProgress {
+  riderId: number;
+  riderName: string;
+  contactNumber: string;
+  deliveryType: string;
+  city: string;
+  overallStatus: string;
+  videoProgress: VideoProgressDetail[];
+  totalQuizAttempts: number;
+  avgQuizScore: number | null;
+  firstStarted: string | null;
+  lastActivity: string | null;
 }
 
 /**
@@ -71,6 +102,7 @@ export const getRiderProgressList = async (
   const params = new URLSearchParams();
   if (filters.deliveryType) params.append('deliveryType', filters.deliveryType);
   if (filters.status) params.append('status', filters.status);
+  if (filters.city) params.append('city', filters.city);
   if (filters.startDate) params.append('startDate', filters.startDate);
   if (filters.endDate) params.append('endDate', filters.endDate);
   params.append('page', String(filters.page || 0));
@@ -91,12 +123,21 @@ export const getVideoAnalytics = async (): Promise<VideoAnalytics[]> => {
 };
 
 /**
+ * Get detailed progress for a specific rider
+ */
+export const getRiderDetails = async (riderId: number): Promise<RiderDetailedProgress> => {
+  const response = await client.get<RiderDetailedProgress>(`/academy/admin/analytics/riders/${riderId}`);
+  return response.data;
+};
+
+/**
  * Export rider progress as CSV
  */
 export const exportRiderProgressCsv = async (filters: AnalyticsFilters): Promise<void> => {
   const params = new URLSearchParams();
   if (filters.deliveryType) params.append('deliveryType', filters.deliveryType);
   if (filters.status) params.append('status', filters.status);
+  if (filters.city) params.append('city', filters.city);
   if (filters.startDate) params.append('startDate', filters.startDate);
   if (filters.endDate) params.append('endDate', filters.endDate);
 
