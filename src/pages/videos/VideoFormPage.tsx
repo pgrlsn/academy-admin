@@ -6,7 +6,9 @@ import {
   getVideoById,
   uploadVideo,
   uploadThumbnail,
+  getAllVideos,
   type VideoCreateRequest,
+  type Video,
 } from '../../api/videos';
 import { DELIVERY_TYPES } from '../../api/tracks';
 import {
@@ -55,6 +57,50 @@ const VideoFormPage = () => {
   const [loading, setLoading] = useState(isEditMode);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sequence order validation
+  const [existingVideos, setExistingVideos] = useState<Video[]>([]);
+  const [sequenceWarning, setSequenceWarning] = useState<string | null>(null);
+
+  // Fetch all videos for sequence order validation
+  useEffect(() => {
+    const fetchAllVideos = async () => {
+      try {
+        const videos = await getAllVideos();
+        setExistingVideos(videos);
+
+        // For new videos, set default sequence to max + 1
+        if (!isEditMode && videos.length > 0) {
+          const maxSequence = Math.max(...videos.map((v) => v.sequenceOrder || 0));
+          setSequenceOrder(maxSequence + 1);
+        }
+      } catch (err) {
+        console.error('Failed to fetch videos for sequence validation:', err);
+      }
+    };
+    fetchAllVideos();
+  }, [isEditMode]);
+
+  // Check for sequence order conflicts
+  useEffect(() => {
+    if (existingVideos.length === 0) {
+      setSequenceWarning(null);
+      return;
+    }
+
+    const conflictingVideo = existingVideos.find(
+      (v) => v.sequenceOrder === sequenceOrder && (!isEditMode || v.id !== parseInt(id || '0', 10))
+    );
+
+    if (conflictingVideo) {
+      setSequenceWarning(
+        `Warning: Video "${conflictingVideo.title}" already has sequence order ${sequenceOrder}. ` +
+        `This may cause unpredictable display order.`
+      );
+    } else {
+      setSequenceWarning(null);
+    }
+  }, [sequenceOrder, existingVideos, isEditMode, id]);
 
   // Fetch video data for edit mode
   useEffect(() => {
@@ -328,6 +374,9 @@ const VideoFormPage = () => {
               placeholder="Display order (1, 2, 3...)"
             />
             <p className="field-hint">Videos are displayed to riders in this order</p>
+            {sequenceWarning && (
+              <p className="field-warning">{sequenceWarning}</p>
+            )}
           </div>
 
           <div className="form-group">

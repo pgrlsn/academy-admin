@@ -142,3 +142,13 @@ export const getDeliveryTypes = async (): Promise<string[]> => {
   const response = await apiClient.get('/academy/admin/delivery-types');
   return response.data;
 };
+
+// Get all videos (for sequence order validation)
+export const getAllVideos = async (): Promise<Video[]> => {
+  const response = await apiClient.get('/academy/admin/videos');
+  // Handle both array response and paginated response
+  if (Array.isArray(response.data)) {
+    return response.data;
+  }
+  return response.data.content || [];
+};
