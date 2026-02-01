@@ -15,7 +15,7 @@ const DashboardPage: React.FC = () => {
     <div className="dashboard-container">
       <header className="dashboard-header">
         <div className="header-left">
-          <h1>Academy Admin</h1>
+          <h1>LSN Training Admin</h1>
         </div>
         <div className="header-right">
           <span className="user-info">
@@ -29,7 +29,7 @@ const DashboardPage: React.FC = () => {
 
       <main className="dashboard-main">
         <div className="welcome-card">
-          <h2>Welcome to Academy Admin</h2>
+          <h2>Welcome to LSN Training Admin</h2>
           <p>
             Manage training videos, quizzes, and track rider progress from this
             dashboard.

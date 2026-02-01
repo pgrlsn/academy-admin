@@ -59,21 +59,21 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      if (otp.length !== 6) {
-        throw new Error('Please enter a valid 6-digit OTP');
+      if (otp.length !== 4) {
+        throw new Error('Please enter a valid 4-digit OTP');
       }
 
       const response = await authApi.login({
         number: phoneNumber.replace(/\D/g, ''),
         otp,
         referenceId,
-        loginFrom: 'ACADEMY_ADMIN',
+        loginFrom: 'desktop',
       });
 
-      if (response.status.code === 200 && response.response.valid) {
+      if (response.response.valid) {
         const { token, userBO } = response.response;
-        if (!token || !userBO) {
-          throw new Error('Invalid response from server');
+        if (!token || !userBO?.id) {
+          throw new Error('User not found. Ensure your account has admin/desktop access.');
         }
 
         try {
@@ -84,7 +84,9 @@ const LoginPage: React.FC = () => {
           setError(authError instanceof Error ? authError.message : 'Access denied');
         }
       } else {
-        throw new Error(response.response.exception || 'Invalid OTP');
+        throw new Error(
+          response.response.exception || response.status.message || 'Invalid OTP'
+        );
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Verification failed');
@@ -103,7 +105,7 @@ const LoginPage: React.FC = () => {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <h1>Academy Admin</h1>
+          <h1>LSN Training Admin</h1>
           <p>Training Content Management System</p>
         </div>
 
@@ -140,8 +142,8 @@ const LoginPage: React.FC = () => {
                 id="otp"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                placeholder="Enter 6-digit OTP"
-                maxLength={6}
+                placeholder="Enter 4-digit OTP"
+                maxLength={4}
                 disabled={isLoading}
                 required
               />
